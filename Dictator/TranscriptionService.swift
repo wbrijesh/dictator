@@ -9,7 +9,10 @@ import Foundation
 
 class TranscriptionService {
     private let apiURL = "https://api.openai.com/v1/audio/transcriptions"
-    private let model = "gpt-4o-transcribe"
+    
+    private var selectedModel: String {
+        return UserDefaults.standard.string(forKey: "selectedTranscriptionModel") ?? "gpt-4o-transcribe"
+    }
     
     enum TranscriptionError: Error {
         case noAPIKey
@@ -78,7 +81,7 @@ class TranscriptionService {
         // Add model parameter
         body.append("--\(boundary)\r\n".data(using: .utf8)!)
         body.append("Content-Disposition: form-data; name=\"model\"\r\n\r\n".data(using: .utf8)!)
-        body.append("\(model)\r\n".data(using: .utf8)!)
+        body.append("\(selectedModel)\r\n".data(using: .utf8)!)
         
         // Add response_format parameter
         body.append("--\(boundary)\r\n".data(using: .utf8)!)

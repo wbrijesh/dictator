@@ -11,7 +11,7 @@ import AVFoundation
 class MenuBarController: NSObject {
     private var floatingWindow: NSWindow?
     private var windowController: FloatingWindowViewController?
-    private var audioRecorder: AudioRecorder?
+    var audioRecorder: AudioRecorder? // Made public for Settings access
     private var transcriptionService: TranscriptionService?
     private var isRecording = false
     

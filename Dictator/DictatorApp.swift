@@ -23,15 +23,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusBarItem: NSStatusItem?
     var menuBarController: MenuBarController?
     var hotkeyManager: HotkeyManager?
+    var settingsWindowController: SettingsWindowController?
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Hide dock icon
         NSApp.setActivationPolicy(.accessory)
-        
-        // Set app icon programmatically using SF Symbol
-        if let appIcon = NSImage(systemSymbolName: "bubble.left.and.text.bubble.right", accessibilityDescription: "Dictator") {
-            NSApp.applicationIconImage = appIcon
-        }
         
         // Create status bar item
         statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -87,14 +83,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
         
         // Settings item
-        let settingsItem = NSMenuItem(title: "Change API Key...", action: #selector(settingsMenuClicked), keyEquivalent: "")
+        let settingsItem = NSMenuItem(title: "Settings...", action: #selector(settingsMenuClicked), keyEquivalent: ",")
         settingsItem.target = self
         menu.addItem(settingsItem)
-        
-        // Microphone selection item
-        let micItem = NSMenuItem(title: "Select Microphone...", action: #selector(microphoneMenuClicked), keyEquivalent: "")
-        micItem.target = self
-        menu.addItem(micItem)
         
         // About item
         let aboutItem = NSMenuItem(title: "About Dictator", action: #selector(aboutMenuClicked), keyEquivalent: "")
@@ -116,11 +107,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func settingsMenuClicked() {
-        showAPIKeySetupAlert()
-    }
-    
-    @objc func microphoneMenuClicked() {
-        menuBarController?.showMicrophoneSelector()
+        if settingsWindowController == nil {
+            settingsWindowController = SettingsWindowController(audioRecorder: menuBarController?.audioRecorder)
+        }
+        settingsWindowController?.showWindow(nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
     
     @objc func aboutMenuClicked() {
@@ -144,54 +135,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func checkAPIKeySetup() {
         if KeychainHelper.getAPIKey() == nil && ProcessInfo.processInfo.environment["OPENAI_API_KEY"] == nil {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                self.showAPIKeySetupAlert()
+                self.settingsMenuClicked()
             }
         }
-    }
-    
-    private func showAPIKeySetupAlert() {
-        let alert = NSAlert()
-        alert.messageText = "OpenAI API Key Required"
-        alert.informativeText = "Please enter your OpenAI API key to use Dictator. You can get one from https://platform.openai.com/api-keys"
-        alert.alertStyle = .informational
-        
-        let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 24))
-        textField.placeholderString = "sk-..."
-        alert.accessoryView = textField
-        
-        alert.addButton(withTitle: "Save")
-        alert.addButton(withTitle: "Cancel")
-        
-        let response = alert.runModal()
-        
-        if response == .alertFirstButtonReturn {
-            let apiKey = textField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !apiKey.isEmpty {
-                if KeychainHelper.saveAPIKey(apiKey) {
-                    showSuccessAlert()
-                } else {
-                    showErrorAlert("Failed to save API key to Keychain")
-                }
-            }
-        }
-    }
-    
-    private func showSuccessAlert() {
-        let alert = NSAlert()
-        alert.messageText = "API Key Saved"
-        alert.informativeText = "Your OpenAI API key has been securely saved. You can now use Dictator by pressing Cmd+Shift+D or clicking the menu bar icon."
-        alert.alertStyle = .informational
-        alert.addButton(withTitle: "OK")
-        alert.runModal()
-    }
-    
-    private func showErrorAlert(_ message: String) {
-        let alert = NSAlert()
-        alert.messageText = "Error"
-        alert.informativeText = message
-        alert.alertStyle = .warning
-        alert.addButton(withTitle: "OK")
-        alert.runModal()
     }
 }
 
