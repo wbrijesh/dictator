@@ -28,11 +28,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Hide dock icon
         NSApp.setActivationPolicy(.accessory)
         
+        // Set app icon programmatically using SF Symbol
+        if let appIcon = NSImage(systemSymbolName: "bubble.left.and.text.bubble.right", accessibilityDescription: "Dictator") {
+            NSApp.applicationIconImage = appIcon
+        }
+        
         // Create status bar item
         statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
         if let button = statusBarItem?.button {
-            button.image = NSImage(systemSymbolName: "mic.fill", accessibilityDescription: "Dictator")
+            button.image = NSImage(systemSymbolName: "bubble.left.and.text.bubble.right", accessibilityDescription: "Dictator")
             button.action = #selector(statusBarButtonClicked)
             button.target = self
             
@@ -86,6 +91,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         settingsItem.target = self
         menu.addItem(settingsItem)
         
+        // Microphone selection item
+        let micItem = NSMenuItem(title: "Select Microphone...", action: #selector(microphoneMenuClicked), keyEquivalent: "")
+        micItem.target = self
+        menu.addItem(micItem)
+        
         // About item
         let aboutItem = NSMenuItem(title: "About Dictator", action: #selector(aboutMenuClicked), keyEquivalent: "")
         aboutItem.target = self
@@ -107,6 +117,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func settingsMenuClicked() {
         showAPIKeySetupAlert()
+    }
+    
+    @objc func microphoneMenuClicked() {
+        menuBarController?.showMicrophoneSelector()
     }
     
     @objc func aboutMenuClicked() {

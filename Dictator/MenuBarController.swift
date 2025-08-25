@@ -156,6 +156,46 @@ class MenuBarController: NSObject {
             completion(false)
         }
     }
+    
+    func showMicrophoneSelector() {
+        let devices = audioRecorder?.getAvailableInputDevices() ?? []
+        let currentDevice = audioRecorder?.getCurrentSelectedDevice()
+        
+        let alert = NSAlert()
+        alert.messageText = "Select Microphone"
+        alert.informativeText = "Choose which microphone to use for recording:"
+        alert.alertStyle = .informational
+        
+        let popup = NSPopUpButton(frame: NSRect(x: 0, y: 0, width: 300, height: 24))
+        
+        var selectedIndex = 0
+        for (index, device) in devices.enumerated() {
+            popup.addItem(withTitle: device.name)
+            
+            // Set the current selection if it matches
+            if let current = currentDevice, current.id == device.id {
+                selectedIndex = index
+            }
+        }
+        
+        // Select the current device in the dropdown
+        popup.selectItem(at: selectedIndex)
+        
+        alert.accessoryView = popup
+        alert.addButton(withTitle: "Select")
+        alert.addButton(withTitle: "Cancel")
+        
+        let response = alert.runModal()
+        
+        if response == .alertFirstButtonReturn {
+            let selectedIndex = popup.indexOfSelectedItem
+            if selectedIndex >= 0 && selectedIndex < devices.count {
+                let selectedDevice = devices[selectedIndex]
+                audioRecorder?.setInputDevice(selectedDevice)
+                print("✅ Selected microphone: \(selectedDevice.name)")
+            }
+        }
+    }
 }
 
 // MARK: - FloatingWindowDelegate
