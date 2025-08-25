@@ -1,0 +1,546 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		22A715D12E5CD35300B1CFE7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22A715B52E5CD35100B1CFE7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 22A715BC2E5CD35100B1CFE7;
+			remoteInfo = Dictator;
+		};
+		22A715DB2E5CD35300B1CFE7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22A715B52E5CD35100B1CFE7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 22A715BC2E5CD35100B1CFE7;
+			remoteInfo = Dictator;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		22A715BD2E5CD35100B1CFE7 /* Dictator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dictator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22A715D02E5CD35300B1CFE7 /* DictatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DictatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		22A715DA2E5CD35300B1CFE7 /* DictatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DictatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		22A715BF2E5CD35100B1CFE7 /* Dictator */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Dictator;
+			sourceTree = "<group>";
+		};
+		22A715D32E5CD35300B1CFE7 /* DictatorTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DictatorTests;
+			sourceTree = "<group>";
+		};
+		22A715DD2E5CD35300B1CFE7 /* DictatorUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DictatorUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		22A715BA2E5CD35100B1CFE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		22A715CD2E5CD35300B1CFE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		22A715D72E5CD35300B1CFE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		22A715B42E5CD35100B1CFE7 = {
+			isa = PBXGroup;
+			children = (
+				22A715BF2E5CD35100B1CFE7 /* Dictator */,
+				22A715D32E5CD35300B1CFE7 /* DictatorTests */,
+				22A715DD2E5CD35300B1CFE7 /* DictatorUITests */,
+				22A715BE2E5CD35100B1CFE7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		22A715BE2E5CD35100B1CFE7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				22A715BD2E5CD35100B1CFE7 /* Dictator.app */,
+				22A715D02E5CD35300B1CFE7 /* DictatorTests.xctest */,
+				22A715DA2E5CD35300B1CFE7 /* DictatorUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		22A715BC2E5CD35100B1CFE7 /* Dictator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22A715E42E5CD35300B1CFE7 /* Build configuration list for PBXNativeTarget "Dictator" */;
+			buildPhases = (
+				22A715B92E5CD35100B1CFE7 /* Sources */,
+				22A715BA2E5CD35100B1CFE7 /* Frameworks */,
+				22A715BB2E5CD35100B1CFE7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				22A715BF2E5CD35100B1CFE7 /* Dictator */,
+			);
+			name = Dictator;
+			packageProductDependencies = (
+			);
+			productName = Dictator;
+			productReference = 22A715BD2E5CD35100B1CFE7 /* Dictator.app */;
+			productType = "com.apple.product-type.application";
+		};
+		22A715CF2E5CD35300B1CFE7 /* DictatorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22A715E72E5CD35300B1CFE7 /* Build configuration list for PBXNativeTarget "DictatorTests" */;
+			buildPhases = (
+				22A715CC2E5CD35300B1CFE7 /* Sources */,
+				22A715CD2E5CD35300B1CFE7 /* Frameworks */,
+				22A715CE2E5CD35300B1CFE7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				22A715D22E5CD35300B1CFE7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				22A715D32E5CD35300B1CFE7 /* DictatorTests */,
+			);
+			name = DictatorTests;
+			packageProductDependencies = (
+			);
+			productName = DictatorTests;
+			productReference = 22A715D02E5CD35300B1CFE7 /* DictatorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		22A715D92E5CD35300B1CFE7 /* DictatorUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22A715EA2E5CD35300B1CFE7 /* Build configuration list for PBXNativeTarget "DictatorUITests" */;
+			buildPhases = (
+				22A715D62E5CD35300B1CFE7 /* Sources */,
+				22A715D72E5CD35300B1CFE7 /* Frameworks */,
+				22A715D82E5CD35300B1CFE7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				22A715DC2E5CD35300B1CFE7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				22A715DD2E5CD35300B1CFE7 /* DictatorUITests */,
+			);
+			name = DictatorUITests;
+			packageProductDependencies = (
+			);
+			productName = DictatorUITests;
+			productReference = 22A715DA2E5CD35300B1CFE7 /* DictatorUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		22A715B52E5CD35100B1CFE7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					22A715BC2E5CD35100B1CFE7 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					22A715CF2E5CD35300B1CFE7 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 22A715BC2E5CD35100B1CFE7;
+					};
+					22A715D92E5CD35300B1CFE7 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 22A715BC2E5CD35100B1CFE7;
+					};
+				};
+			};
+			buildConfigurationList = 22A715B82E5CD35100B1CFE7 /* Build configuration list for PBXProject "Dictator" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 22A715B42E5CD35100B1CFE7;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 22A715BE2E5CD35100B1CFE7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				22A715BC2E5CD35100B1CFE7 /* Dictator */,
+				22A715CF2E5CD35300B1CFE7 /* DictatorTests */,
+				22A715D92E5CD35300B1CFE7 /* DictatorUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		22A715BB2E5CD35100B1CFE7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		22A715CE2E5CD35300B1CFE7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		22A715D82E5CD35300B1CFE7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		22A715B92E5CD35100B1CFE7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		22A715CC2E5CD35300B1CFE7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		22A715D62E5CD35300B1CFE7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		22A715D22E5CD35300B1CFE7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 22A715BC2E5CD35100B1CFE7 /* Dictator */;
+			targetProxy = 22A715D12E5CD35300B1CFE7 /* PBXContainerItemProxy */;
+		};
+		22A715DC2E5CD35300B1CFE7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 22A715BC2E5CD35100B1CFE7 /* Dictator */;
+			targetProxy = 22A715DB2E5CD35300B1CFE7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		22A715E22E5CD35300B1CFE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		22A715E32E5CD35300B1CFE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		22A715E52E5CD35300B1CFE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Dictator/Dictator.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Brijesh-Wawdhane.Dictator";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		22A715E62E5CD35300B1CFE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Dictator/Dictator.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Brijesh-Wawdhane.Dictator";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		22A715E82E5CD35300B1CFE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Brijesh-Wawdhane.DictatorTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Dictator.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Dictator";
+			};
+			name = Debug;
+		};
+		22A715E92E5CD35300B1CFE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Brijesh-Wawdhane.DictatorTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Dictator.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Dictator";
+			};
+			name = Release;
+		};
+		22A715EB2E5CD35300B1CFE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Brijesh-Wawdhane.DictatorUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Dictator;
+			};
+			name = Debug;
+		};
+		22A715EC2E5CD35300B1CFE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Brijesh-Wawdhane.DictatorUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = Dictator;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		22A715B82E5CD35100B1CFE7 /* Build configuration list for PBXProject "Dictator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22A715E22E5CD35300B1CFE7 /* Debug */,
+				22A715E32E5CD35300B1CFE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		22A715E42E5CD35300B1CFE7 /* Build configuration list for PBXNativeTarget "Dictator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22A715E52E5CD35300B1CFE7 /* Debug */,
+				22A715E62E5CD35300B1CFE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		22A715E72E5CD35300B1CFE7 /* Build configuration list for PBXNativeTarget "DictatorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22A715E82E5CD35300B1CFE7 /* Debug */,
+				22A715E92E5CD35300B1CFE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		22A715EA2E5CD35300B1CFE7 /* Build configuration list for PBXNativeTarget "DictatorUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22A715EB2E5CD35300B1CFE7 /* Debug */,
+				22A715EC2E5CD35300B1CFE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 22A715B52E5CD35100B1CFE7 /* Project object */;
+}
