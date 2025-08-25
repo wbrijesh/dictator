@@ -225,4 +225,8 @@ extension MenuBarController: FloatingWindowDelegate {
             audioRecorder?.stopRecording { _ in }
         }
     }
+    
+    func getAudioLevel() -> Float {
+        return audioRecorder?.getCurrentAudioLevel() ?? 0.0
+    }
 }

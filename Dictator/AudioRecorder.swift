@@ -20,6 +20,7 @@ class AudioRecorder: NSObject {
     private var isRecording = false
     private var recordingURL: URL?
     private var selectedInputDevice: AudioDevice?
+    private var currentAudioLevel: Float = 0.0
     
     override init() {
         super.init()
@@ -202,10 +203,13 @@ class AudioRecorder: NSObject {
             
             audioFile = try AVAudioFile(forWriting: url, settings: settings)
             
-            // Install tap on input node
+            // Install tap on input node with level monitoring
             inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { [weak self] buffer, _ in
                 do {
                     try self?.audioFile?.write(from: buffer)
+                    
+                    // Calculate audio level for waveform visualization
+                    self?.updateAudioLevel(from: buffer)
                 } catch {
                     print("❌ Error writing audio buffer: \(error)")
                 }
@@ -250,6 +254,32 @@ class AudioRecorder: NSObject {
         let tempDir = FileManager.default.temporaryDirectory
         let fileName = "dictator_recording_\(Date().timeIntervalSince1970).m4a"
         return tempDir.appendingPathComponent(fileName)
+    }
+    
+    func getCurrentAudioLevel() -> Float {
+        return currentAudioLevel
+    }
+    
+    private func updateAudioLevel(from buffer: AVAudioPCMBuffer) {
+        guard let channelData = buffer.floatChannelData?[0] else { return }
+        
+        let frameLength = Int(buffer.frameLength)
+        var sum: Float = 0.0
+        
+        // Calculate RMS (Root Mean Square) for audio level
+        for i in 0..<frameLength {
+            let sample = channelData[i]
+            sum += sample * sample
+        }
+        
+        let rms = sqrt(sum / Float(frameLength))
+        
+        // Smooth the audio level to avoid jittery animations
+        let smoothingFactor: Float = 0.3
+        currentAudioLevel = (currentAudioLevel * (1.0 - smoothingFactor)) + (rms * smoothingFactor)
+        
+        // Clamp to reasonable range
+        currentAudioLevel = min(max(currentAudioLevel, 0.0), 1.0)
     }
     
     private func cleanup() {
