@@ -4,7 +4,7 @@ A lightweight native macOS menu bar app that transcribes audio to text using Ope
 
 ## Features
 
-- **Global Hotkey**: Press `Cmd+Shift+D` to start/stop recording
+- **Global Hotkey**: Press `Option+Space` to start/stop recording
 - **Menu Bar Integration**: Click the microphone icon in the menu bar
 - **Privacy-Focused**: No persistent storage of audio or transcripts
 - **Fast & Efficient**: Minimal resource usage when idle
@@ -29,7 +29,7 @@ A lightweight native macOS menu bar app that transcribes audio to text using Ope
 ## Usage
 
 ### Recording Audio
-- **Hotkey**: Press `Cmd+Shift+D` anywhere on your Mac
+- **Hotkey**: Press `Option+Space` anywhere on your Mac
 - **Menu Bar**: Left-click the microphone icon
 - **Menu**: Right-click → "Start Recording"
 

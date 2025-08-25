@@ -22,6 +22,12 @@ class MenuBarController: NSObject {
     }
     
     func toggleRecording() {
+        // If window is open but not recording, close it
+        if floatingWindow?.isVisible == true && !isRecording {
+            didTapClose()
+            return
+        }
+        
         if isRecording {
             stopRecording()
         } else {
@@ -71,6 +77,11 @@ class MenuBarController: NSObject {
         
         floatingWindow?.makeKeyAndOrderFront(nil)
         floatingWindow?.center()
+        
+        // Ensure the window can receive keyboard events
+        DispatchQueue.main.async {
+            self.floatingWindow?.makeKey()
+        }
     }
     
     private func createFloatingWindow() {
@@ -78,7 +89,7 @@ class MenuBarController: NSObject {
         
         floatingWindow = NSWindow(
             contentRect: windowRect,
-            styleMask: [.borderless, .nonactivatingPanel],
+            styleMask: [.borderless],
             backing: .buffered,
             defer: false
         )
@@ -88,6 +99,9 @@ class MenuBarController: NSObject {
         floatingWindow?.hasShadow = true
         floatingWindow?.isOpaque = false
         floatingWindow?.titlebarAppearsTransparent = true
+        
+        // Enable mouse events
+        floatingWindow?.acceptsMouseMovedEvents = true
         
         // Create and set up the view controller
         windowController = FloatingWindowViewController()

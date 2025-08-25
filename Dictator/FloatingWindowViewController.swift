@@ -12,7 +12,7 @@ protocol FloatingWindowDelegate: AnyObject {
     func didTapStopRecording()
     func didTapCopyText(_ text: String)
     func didTapClose()
-    func getAudioLevel() -> Float // For waveform animation
+    func getAudioLevel() -> Float
 }
 
 class FloatingWindowViewController: NSViewController {
@@ -20,20 +20,26 @@ class FloatingWindowViewController: NSViewController {
     
     // UI Elements
     private var containerView: NSView!
-    private var headerView: NSView!
     private var statusLabel: NSTextField!
     private var actionButton: NSButton!
     private var textView: NSTextView!
     private var scrollView: NSScrollView!
     private var copyButton: NSButton!
     private var closeButton: NSButton!
-    private var waveformView: WaveformView!
+    private var recordingIndicator: NSView!
     private var progressIndicator: NSProgressIndicator!
+    private var keyboardHintLabel: NSTextField!
     
     // State
     private var currentState: WindowState = .idle
     private var transcriptionText: String = ""
-    private var waveformTimer: Timer?
+    
+    // Dynamic sizing
+    private let baseWidth: CGFloat = 360
+    private let baseHeight: CGFloat = 180
+    private let expandedHeight: CGFloat = 260
+    private let recordingWidth: CGFloat = 240
+    private let recordingHeight: CGFloat = 50
     
     enum WindowState {
         case idle
@@ -44,7 +50,7 @@ class FloatingWindowViewController: NSViewController {
     }
     
     override func loadView() {
-        view = NSView(frame: NSRect(x: 0, y: 0, width: 400, height: 280))
+        view = NSView(frame: NSRect(x: 0, y: 0, width: baseWidth, height: baseHeight))
         view.wantsLayer = true
         setupUI()
         updateUI(for: .idle)
@@ -53,101 +59,89 @@ class FloatingWindowViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupKeyboardShortcuts()
+        setupAppearanceObserver()
+    }
+    
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        // Make sure window can receive key events
+        view.window?.makeKeyAndOrderFront(nil)
     }
     
     private func setupUI() {
-        // Main container with modern styling
+        // Main container
         containerView = NSView(frame: view.bounds)
         containerView.wantsLayer = true
-        containerView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-        containerView.layer?.cornerRadius = 16
-        containerView.layer?.borderWidth = 1
-        containerView.layer?.borderColor = NSColor.separatorColor.cgColor
-        
-        // Add subtle shadow
-        containerView.shadow = NSShadow()
-        containerView.shadow?.shadowColor = NSColor.black.withAlphaComponent(0.1)
-        containerView.shadow?.shadowOffset = NSSize(width: 0, height: -2)
-        containerView.shadow?.shadowBlurRadius = 8
+        updateContainerAppearance()
         
         view.addSubview(containerView)
         
-        // Header view
-        headerView = NSView(frame: NSRect(x: 0, y: 240, width: 400, height: 40))
-        headerView.wantsLayer = true
-        headerView.layer?.backgroundColor = NSColor.controlAccentColor.withAlphaComponent(0.1).cgColor
-        headerView.layer?.cornerRadius = 16
-        headerView.layer?.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        containerView.addSubview(headerView)
-        
-        // Close button (modern style)
-        closeButton = NSButton(frame: NSRect(x: 360, y: 250, width: 20, height: 20))
+        // Close button (minimal, top-right)
+        closeButton = NSButton(frame: NSRect(x: baseWidth - 30, y: baseHeight - 30, width: 20, height: 20))
         closeButton.title = ""
-        closeButton.image = NSImage(systemSymbolName: "xmark.circle.fill", accessibilityDescription: "Close")
+        closeButton.image = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Close")
         closeButton.isBordered = false
         closeButton.target = self
         closeButton.action = #selector(closeButtonTapped)
         containerView.addSubview(closeButton)
         
-        // Status label with better typography
-        statusLabel = NSTextField(frame: NSRect(x: 20, y: 250, width: 320, height: 20))
+        // Status label
+        statusLabel = NSTextField(frame: NSRect(x: 20, y: baseHeight - 50, width: baseWidth - 40, height: 24))
         statusLabel.isEditable = false
         statusLabel.isBezeled = false
         statusLabel.drawsBackground = false
-        statusLabel.font = NSFont.systemFont(ofSize: 16, weight: .semibold)
-        statusLabel.textColor = NSColor.labelColor
+        statusLabel.font = NSFont.systemFont(ofSize: 16, weight: .medium)
         statusLabel.alignment = .center
         containerView.addSubview(statusLabel)
         
-        // Waveform visualization
-        waveformView = WaveformView(frame: NSRect(x: 50, y: 180, width: 300, height: 40))
-        waveformView.isHidden = true
-        containerView.addSubview(waveformView)
+        // Recording indicator (red circle)
+        recordingIndicator = NSView(frame: NSRect(x: 20, y: 0, width: 12, height: 12))
+        recordingIndicator.wantsLayer = true
+        recordingIndicator.layer?.backgroundColor = NSColor.systemRed.cgColor
+        recordingIndicator.layer?.cornerRadius = 6
+        recordingIndicator.isHidden = true
+        containerView.addSubview(recordingIndicator)
         
-        // Progress indicator for transcribing
-        progressIndicator = NSProgressIndicator(frame: NSRect(x: 180, y: 190, width: 40, height: 40))
+        // Small progress indicator (centered)
+        progressIndicator = NSProgressIndicator(frame: NSRect(x: (baseWidth - 20) / 2, y: 90, width: 20, height: 20))
         progressIndicator.style = .spinning
+        progressIndicator.controlSize = .small
         progressIndicator.isHidden = true
         containerView.addSubview(progressIndicator)
         
-        // Action button with modern styling
-        actionButton = NSButton(frame: NSRect(x: 150, y: 140, width: 100, height: 36))
+        // Action button
+        actionButton = NSButton(frame: NSRect(x: (baseWidth - 100) / 2, y: 50, width: 100, height: 32))
         actionButton.bezelStyle = .rounded
         actionButton.font = NSFont.systemFont(ofSize: 14, weight: .medium)
         actionButton.target = self
         actionButton.action = #selector(actionButtonTapped)
         containerView.addSubview(actionButton)
         
-        // Scroll view for text with better styling
-        scrollView = NSScrollView(frame: NSRect(x: 20, y: 50, width: 360, height: 120))
+        // Scroll view for text
+        scrollView = NSScrollView(frame: NSRect(x: 20, y: 50, width: baseWidth - 40, height: 120))
         scrollView.hasVerticalScroller = true
         scrollView.autohidesScrollers = true
         scrollView.borderType = .noBorder
         scrollView.wantsLayer = true
-        scrollView.layer?.cornerRadius = 8
-        scrollView.layer?.borderWidth = 1
-        scrollView.layer?.borderColor = NSColor.separatorColor.cgColor
         scrollView.isHidden = true
         
-        // Text view with better styling
-        let textFrame = NSRect(x: 0, y: 0, width: 360, height: 120)
+        // Text view
+        let textFrame = NSRect(x: 0, y: 0, width: baseWidth - 40, height: 120)
         textView = NSTextView(frame: textFrame)
         textView.isEditable = false
         textView.isSelectable = true
         textView.font = NSFont.systemFont(ofSize: 13)
-        textView.textColor = NSColor.labelColor
-        textView.backgroundColor = NSColor.textBackgroundColor
         textView.isVerticallyResizable = true
         textView.isHorizontallyResizable = false
         textView.textContainer?.widthTracksTextView = true
-        textView.textContainer?.containerSize = NSSize(width: 360, height: CGFloat.greatestFiniteMagnitude)
-        textView.textContainerInset = NSSize(width: 12, height: 12)
+        textView.textContainer?.containerSize = NSSize(width: baseWidth - 40, height: CGFloat.greatestFiniteMagnitude)
+        textView.textContainerInset = NSSize(width: 8, height: 8)
         
         scrollView.documentView = textView
         containerView.addSubview(scrollView)
         
-        // Copy button with modern styling
-        copyButton = NSButton(frame: NSRect(x: 290, y: 15, width: 90, height: 28))
+        // Copy button
+        copyButton = NSButton(frame: NSRect(x: baseWidth - 110, y: 15, width: 80, height: 28))
         copyButton.title = "Copy"
         copyButton.bezelStyle = .rounded
         copyButton.font = NSFont.systemFont(ofSize: 13, weight: .medium)
@@ -157,25 +151,91 @@ class FloatingWindowViewController: NSViewController {
         containerView.addSubview(copyButton)
         
         // Keyboard shortcut hint
-        let hintLabel = NSTextField(frame: NSRect(x: 20, y: 20, width: 250, height: 16))
-        hintLabel.isEditable = false
-        hintLabel.isBezeled = false
-        hintLabel.drawsBackground = false
-        hintLabel.font = NSFont.systemFont(ofSize: 11)
-        hintLabel.textColor = NSColor.secondaryLabelColor
-        hintLabel.stringValue = "⌘↩ Copy • ⎋ Close"
-        hintLabel.isHidden = true
-        containerView.addSubview(hintLabel)
+        keyboardHintLabel = NSTextField(frame: NSRect(x: 20, y: 20, width: 200, height: 16))
+        keyboardHintLabel.isEditable = false
+        keyboardHintLabel.isBezeled = false
+        keyboardHintLabel.drawsBackground = false
+        keyboardHintLabel.font = NSFont.systemFont(ofSize: 11)
+        keyboardHintLabel.stringValue = "⌘↩ Copy • ⎋ Close"
+        keyboardHintLabel.isHidden = true
+        containerView.addSubview(keyboardHintLabel)
         
-        // Store reference for showing/hiding
-        copyButton.tag = 100 // Use tag to identify hint label
+        updateTextColors()
+    }
+    
+    private func setupAppearanceObserver() {
+        DistributedNotificationCenter.default.addObserver(
+            self,
+            selector: #selector(systemAppearanceChanged),
+            name: NSNotification.Name("AppleInterfaceThemeChangedNotification"),
+            object: nil
+        )
+    }
+    
+    @objc private func systemAppearanceChanged() {
+        updateContainerAppearance()
+        updateTextColors()
+    }
+    
+    private func updateContainerAppearance() {
+        containerView.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+        containerView.layer?.borderColor = NSColor.separatorColor.cgColor
+        containerView.layer?.borderWidth = 1
+        
+        // Subtle shadow
+        containerView.shadow = NSShadow()
+        containerView.shadow?.shadowColor = NSColor.black.withAlphaComponent(0.15)
+        containerView.shadow?.shadowOffset = NSSize(width: 0, height: -2)
+        containerView.shadow?.shadowBlurRadius = 6
+    }
+    
+    private func updateTextColors() {
+        statusLabel.textColor = NSColor.labelColor
+        keyboardHintLabel.textColor = NSColor.secondaryLabelColor
+        textView.textColor = NSColor.labelColor
+        textView.backgroundColor = NSColor.textBackgroundColor
+        
+        scrollView.layer?.cornerRadius = 6
+        scrollView.layer?.borderWidth = 1
+        scrollView.layer?.borderColor = NSColor.separatorColor.cgColor
+    }
+    
+    private func resizeWindow(to newSize: NSSize, animated: Bool = true) {
+        guard let window = view.window else { return }
+        
+        let currentFrame = window.frame
+        let newFrame = NSRect(
+            x: currentFrame.origin.x + (currentFrame.width - newSize.width) / 2, // Center horizontally
+            y: currentFrame.origin.y + (currentFrame.height - newSize.height),
+            width: newSize.width,
+            height: newSize.height
+        )
+        
+        // Update view and container frames
+        view.frame = NSRect(origin: .zero, size: newSize)
+        containerView.frame = view.bounds
+        
+        // Update container corner radius based on size
+        if newSize.width == recordingWidth && newSize.height == recordingHeight {
+            // Pill shape for recording
+            containerView.layer?.cornerRadius = recordingHeight / 2
+        } else {
+            // Normal corner radius for other states
+            containerView.layer?.cornerRadius = 12
+        }
+        
+        if animated {
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.25
+                context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+                window.animator().setFrame(newFrame, display: true)
+            }
+        } else {
+            window.setFrame(newFrame, display: true)
+        }
     }
     
     private func setupKeyboardShortcuts() {
-        // Make the view accept first responder
-        view.window?.makeFirstResponder(view)
-        
-        // Add local monitor for key events
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             return self?.handleKeyDown(event) ?? event
         }
@@ -184,21 +244,19 @@ class FloatingWindowViewController: NSViewController {
     private func handleKeyDown(_ event: NSEvent) -> NSEvent? {
         let modifiers = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
         
-        // Command + Enter: Copy text
-        if modifiers == .command && event.keyCode == 36 { // Enter key
+        if modifiers == .command && event.keyCode == 36 {
             if case .result = currentState {
                 copyButtonTapped()
-                return nil // Consume the event
+                return nil
             }
         }
         
-        // Escape: Close window
-        if event.keyCode == 53 { // Escape key
+        if event.keyCode == 53 {
             closeButtonTapped()
-            return nil // Consume the event
+            return nil
         }
         
-        return event // Let other events pass through
+        return event
     }
     
     func updateState(_ newState: WindowState) {
@@ -210,107 +268,173 @@ class FloatingWindowViewController: NSViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             
-            // Find hint label
-            let hintLabel = self.containerView.subviews.first { $0 is NSTextField && ($0 as! NSTextField).stringValue.contains("⌘↩") } as? NSTextField
-            
             switch state {
             case .idle:
-                self.statusLabel.stringValue = "🎤 Ready to Record"
+                self.resizeWindow(to: NSSize(width: self.baseWidth, height: self.baseHeight))
+                
+                // Update close button position
+                self.closeButton.frame = NSRect(x: self.baseWidth - 30, y: self.baseHeight - 30, width: 20, height: 20)
+                self.closeButton.isHidden = false
+                
+                // Update status label
+                self.statusLabel.frame = NSRect(x: 20, y: self.baseHeight - 50, width: self.baseWidth - 40, height: 24)
+                self.statusLabel.stringValue = "Ready to Record"
+                self.statusLabel.alignment = .center
+                self.statusLabel.isHidden = false
+                
                 self.actionButton.title = "Start Recording"
                 self.actionButton.isHidden = false
-                self.waveformView.isHidden = true
+                self.actionButton.frame = NSRect(x: (self.baseWidth - 100) / 2, y: 50, width: 100, height: 32)
+                
+                self.recordingIndicator.isHidden = true
                 self.progressIndicator.isHidden = true
                 self.scrollView.isHidden = true
                 self.copyButton.isHidden = true
-                hintLabel?.isHidden = true
-                self.stopWaveformAnimation()
-                self.updateButtonStyle(recording: false)
+                self.keyboardHintLabel.isHidden = true
+                self.stopRecordingAnimation()
                 
             case .recording:
-                self.statusLabel.stringValue = "🔴 Recording... Speak clearly"
-                self.actionButton.title = "Stop Recording"
-                self.actionButton.isHidden = false
-                self.waveformView.isHidden = false
+                self.resizeWindow(to: NSSize(width: self.recordingWidth, height: self.recordingHeight))
+                
+                // Hide other elements
+                self.statusLabel.isHidden = true
+                self.actionButton.isHidden = true
                 self.progressIndicator.isHidden = true
                 self.scrollView.isHidden = true
                 self.copyButton.isHidden = true
-                hintLabel?.isHidden = true
-                self.startWaveformAnimation()
-                self.updateButtonStyle(recording: true)
+                self.keyboardHintLabel.isHidden = true
+                
+                // Show recording elements in a single line
+                // Red circle indicator
+                self.recordingIndicator.isHidden = false
+                self.recordingIndicator.frame = NSRect(x: 15, y: (self.recordingHeight - 12) / 2, width: 12, height: 12)
+                
+                // Recording text
+                self.statusLabel.isHidden = false
+                self.statusLabel.frame = NSRect(x: 35, y: (self.recordingHeight - 20) / 2, width: 140, height: 20)
+                self.statusLabel.stringValue = "Recording..."
+                self.statusLabel.alignment = .left
+                self.statusLabel.font = NSFont.systemFont(ofSize: 14, weight: .medium)
+                
+                // Close button (X)
+                self.closeButton.isHidden = false
+                self.closeButton.frame = NSRect(x: self.recordingWidth - 30, y: (self.recordingHeight - 20) / 2, width: 20, height: 20)
+                
+                self.startRecordingAnimation()
                 
             case .transcribing:
-                self.statusLabel.stringValue = "🤖 Transcribing audio..."
+                self.resizeWindow(to: NSSize(width: self.recordingWidth, height: self.recordingHeight))
+                
+                // Hide other elements
+                self.statusLabel.isHidden = true
                 self.actionButton.isHidden = true
-                self.waveformView.isHidden = true
-                self.progressIndicator.isHidden = false
-                self.progressIndicator.startAnimation(nil)
+                self.recordingIndicator.isHidden = true
                 self.scrollView.isHidden = true
                 self.copyButton.isHidden = true
-                hintLabel?.isHidden = true
-                self.stopWaveformAnimation()
+                self.keyboardHintLabel.isHidden = true
+                
+                // Show transcribing elements in a single line (same as recording)
+                // Progress spinner
+                self.progressIndicator.isHidden = false
+                self.progressIndicator.frame = NSRect(x: 15, y: (self.recordingHeight - 16) / 2, width: 16, height: 16)
+                self.progressIndicator.controlSize = .small
+                self.progressIndicator.startAnimation(nil)
+                
+                // Transcribing text
+                self.statusLabel.isHidden = false
+                self.statusLabel.frame = NSRect(x: 40, y: (self.recordingHeight - 20) / 2, width: 140, height: 20)
+                self.statusLabel.stringValue = "Transcribing..."
+                self.statusLabel.alignment = .left
+                self.statusLabel.font = NSFont.systemFont(ofSize: 14, weight: .medium)
+                
+                // Close button (X)
+                self.closeButton.isHidden = false
+                self.closeButton.frame = NSRect(x: self.recordingWidth - 30, y: (self.recordingHeight - 20) / 2, width: 20, height: 20)
+                
+                self.stopRecordingAnimation()
                 
             case .result(let text):
-                self.statusLabel.stringValue = "✅ Transcription Complete"
+                self.resizeWindow(to: NSSize(width: self.baseWidth, height: self.expandedHeight))
+                
+                // Close button position (top right)
+                self.closeButton.frame = NSRect(x: self.baseWidth - 30, y: self.expandedHeight - 30, width: 20, height: 20)
+                self.closeButton.isHidden = false
+                
+                // Title on same line as close button (top left)
+                self.statusLabel.frame = NSRect(x: 20, y: self.expandedHeight - 30, width: 200, height: 20)
+                self.statusLabel.stringValue = "Transcription"
+                self.statusLabel.alignment = .left
+                self.statusLabel.font = NSFont.systemFont(ofSize: 14, weight: .medium)
+                self.statusLabel.isHidden = false
+                
+                // Text area - more space since no centered title
+                self.scrollView.isHidden = false
+                self.scrollView.frame = NSRect(x: 20, y: 50, width: self.baseWidth - 40, height: 170)
+                
+                // Buttons on RIGHT side - flush alignment with increased height
+                self.copyButton.isHidden = false
+                self.copyButton.frame = NSRect(x: self.baseWidth - 90, y: 12, width: 70, height: 34)
+                
                 self.actionButton.title = "Record Again"
                 self.actionButton.isHidden = false
-                self.waveformView.isHidden = true
+                self.actionButton.frame = NSRect(x: self.baseWidth - 170, y: 12, width: 75, height: 34)
+                
+                // Keyboard shortcuts on LEFT side - flush alignment
+                self.keyboardHintLabel.isHidden = false
+                self.keyboardHintLabel.frame = NSRect(x: 20, y: 20, width: 150, height: 16)
+                
+                self.recordingIndicator.isHidden = true
                 self.progressIndicator.isHidden = true
                 self.progressIndicator.stopAnimation(nil)
-                self.scrollView.isHidden = false
-                self.copyButton.isHidden = false
-                hintLabel?.isHidden = false
+                
                 self.transcriptionText = text
-                
-                // Update text view with animation
-                NSAnimationContext.runAnimationGroup { context in
-                    context.duration = 0.3
-                    self.scrollView.animator().alphaValue = 1.0
-                }
-                
                 self.textView.string = text
                 self.textView.needsLayout = true
                 self.textView.layoutSubtreeIfNeeded()
                 self.textView.scrollRangeToVisible(NSRange(location: 0, length: 0))
                 
-                self.stopWaveformAnimation()
-                self.updateButtonStyle(recording: false)
+                self.stopRecordingAnimation()
                 
             case .error(let message):
-                self.statusLabel.stringValue = "❌ Error: \(message)"
+                self.resizeWindow(to: NSSize(width: self.baseWidth, height: self.baseHeight))
+                
+                // Update close button position
+                self.closeButton.frame = NSRect(x: self.baseWidth - 30, y: self.baseHeight - 30, width: 20, height: 20)
+                self.closeButton.isHidden = false
+                
+                // Update status label
+                self.statusLabel.frame = NSRect(x: 20, y: self.baseHeight - 50, width: self.baseWidth - 40, height: 24)
+                self.statusLabel.stringValue = "Error: \(message)"
+                self.statusLabel.alignment = .center
+                self.statusLabel.isHidden = false
+                
                 self.actionButton.title = "Try Again"
                 self.actionButton.isHidden = false
-                self.waveformView.isHidden = true
+                self.actionButton.frame = NSRect(x: (self.baseWidth - 100) / 2, y: 50, width: 100, height: 32)
+                
+                self.recordingIndicator.isHidden = true
                 self.progressIndicator.isHidden = true
                 self.progressIndicator.stopAnimation(nil)
                 self.scrollView.isHidden = true
                 self.copyButton.isHidden = true
-                hintLabel?.isHidden = true
-                self.stopWaveformAnimation()
-                self.updateButtonStyle(recording: false)
+                self.keyboardHintLabel.isHidden = true
+                self.stopRecordingAnimation()
             }
         }
     }
     
-    private func updateButtonStyle(recording: Bool) {
-        if recording {
-            actionButton.contentTintColor = NSColor.systemRed
-        } else {
-            actionButton.contentTintColor = NSColor.controlAccentColor
-        }
+    private func startRecordingAnimation() {
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = 1.0
+        animation.toValue = 0.3
+        animation.duration = 0.8
+        animation.repeatCount = .infinity
+        animation.autoreverses = true
+        recordingIndicator.layer?.add(animation, forKey: "pulse")
     }
     
-    private func startWaveformAnimation() {
-        waveformTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
-            let audioLevel = self.delegate?.getAudioLevel() ?? 0.0
-            self.waveformView.updateLevel(audioLevel)
-        }
-    }
-    
-    private func stopWaveformAnimation() {
-        waveformTimer?.invalidate()
-        waveformTimer = nil
-        waveformView.updateLevel(0.0)
+    private func stopRecordingAnimation() {
+        recordingIndicator.layer?.removeAnimation(forKey: "pulse")
     }
     
     @objc private func actionButtonTapped() {
@@ -327,7 +451,6 @@ class FloatingWindowViewController: NSViewController {
     @objc private func copyButtonTapped() {
         delegate?.didTapCopyText(transcriptionText)
         
-        // Visual feedback
         let originalTitle = copyButton.title
         copyButton.title = "Copied!"
         
@@ -339,61 +462,8 @@ class FloatingWindowViewController: NSViewController {
     @objc private func closeButtonTapped() {
         delegate?.didTapClose()
     }
-}
-
-// MARK: - Waveform Visualization
-class WaveformView: NSView {
-    private var audioLevel: Float = 0.0
-    private var bars: [CALayer] = []
-    private let barCount = 20
     
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        setupBars()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupBars()
-    }
-    
-    private func setupBars() {
-        wantsLayer = true
-        
-        let barWidth: CGFloat = 8
-        let barSpacing: CGFloat = 4
-        let totalWidth = CGFloat(barCount) * barWidth + CGFloat(barCount - 1) * barSpacing
-        let startX = (bounds.width - totalWidth) / 2
-        
-        for i in 0..<barCount {
-            let bar = CALayer()
-            bar.backgroundColor = NSColor.controlAccentColor.cgColor
-            bar.cornerRadius = barWidth / 2
-            
-            let x = startX + CGFloat(i) * (barWidth + barSpacing)
-            bar.frame = NSRect(x: x, y: bounds.height / 2, width: barWidth, height: 2)
-            
-            layer?.addSublayer(bar)
-            bars.append(bar)
-        }
-    }
-    
-    func updateLevel(_ level: Float) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            
-            for (index, bar) in self.bars.enumerated() {
-                // Create wave-like pattern
-                let normalizedIndex = Float(index) / Float(self.barCount - 1)
-                let wave = sin(normalizedIndex * .pi * 2 + level * 10) * 0.5 + 0.5
-                let height = max(2, CGFloat(level * wave * 30 + 2))
-                
-                CATransaction.begin()
-                CATransaction.setAnimationDuration(0.1)
-                bar.frame.size.height = height
-                bar.frame.origin.y = (self.bounds.height - height) / 2
-                CATransaction.commit()
-            }
-        }
+    deinit {
+        DistributedNotificationCenter.default.removeObserver(self)
     }
 }

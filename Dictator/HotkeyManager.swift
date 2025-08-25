@@ -23,9 +23,9 @@ class HotkeyManager {
     }
     
     private func setupGlobalHotkey() {
-        // Register Cmd+Shift+D as the global hotkey
-        let keyCode: UInt32 = 2 // 'D' key
-        let modifiers: UInt32 = UInt32(cmdKey | shiftKey)
+        // Register Option+Space as the global hotkey
+        let keyCode: UInt32 = 49 // Space key
+        let modifiers: UInt32 = UInt32(optionKey)
         
         var eventType = EventTypeSpec(eventClass: OSType(kEventClassKeyboard), eventKind: OSType(kEventHotKeyPressed))
         
